@@ -1,0 +1,105 @@
+trabajadores =[]
+
+def calcular_desc_salud(sueldo_bruto):
+    return sueldo_bruto * 0.07
+
+def calcular_desc_afp(sueldo_bruto):
+    return sueldo_bruto * 0.12
+
+def calcular_sueldo_liquido(sueldo_bruto):
+    desc_salud= calcular_desc_salud(sueldo_bruto)
+    desc_afp = calcular_desc_afp(sueldo_bruto)
+    return sueldo_bruto - (desc_salud+desc_afp)
+
+
+def registrar_usuario():
+    nombre = input("Ingrese el nombre: ")
+    apellido = input("Ingrese el apellido: ")
+    cargo = input("Ingrese el cargo: ")
+    while True:
+        try:
+            sueldo_bruto = int(input("Ingrese el sueldo bruto: "))
+            desc_salud = round(calcular_desc_salud(sueldo_bruto))
+            desc_afp = round(calcular_desc_afp(sueldo_bruto))
+            sueldo_liquido = round(calcular_sueldo_liquido(sueldo_bruto))
+
+            trabajador = {
+                'nombre' : nombre,
+                'apellido': apellido,
+                'cargo': cargo,
+                'sueldo_bruto': sueldo_bruto,
+                'desc_salud': desc_salud,
+                'desc_afp' : desc_afp,
+                'sueldo_liquido': sueldo_liquido
+            }
+            trabajadores.append(trabajador)
+            print("Trabajador creado con exito")
+        except ValueError:
+            print("El sueldo bruto debe ser numerico")
+        else:
+            break
+
+def listar_trabajadores():
+    if not trabajadores:
+        print("No se encuentran trabajadores registrados")
+    else:
+        for trabajador in trabajadores:
+            print(f"{trabajador['nombre']} {trabajador['apellido']} - {trabajador['cargo']} - {trabajador['sueldo_bruto']} - {trabajador['desc_salud']} - {trabajador['desc_afp']} - {trabajador['sueldo_liquido']}")
+
+
+def imprimir_trabajadores():
+    print("---- Opciones de impresión ----")
+    print("1 - Imprimir todos los trabajadores")
+    print("2 - Imprimir trabajadores por cargo")
+    op = input("Seleccione una opción: ")
+
+    if op =='1':
+        crear_archivo(trabajadores)
+    elif op =='2':
+        cargo = input("Ingrese el cargo: ")
+        trabajadores_cargo = [trabajador for trabajador in trabajadores if trabajador['cargo'].upper() == cargo.upper()]
+        if trabajadores_cargo:
+            crear_archivo_cargo(trabajadores_cargo)
+        else:
+            print(f"No se encuentran trabajadores registrados con el cargo: {cargo}")
+    else:
+        print("Opción incorrecta, seleccione entre 1 y 2.")
+
+
+def crear_archivo(lista_trabajadores):
+    with open('planilla_trabajadores.txt', 'w') as archivo:
+        for trabajador in lista_trabajadores:
+            archivo.write(f"{trabajador['nombre']} {trabajador['apellido']} - {trabajador['cargo']} - {trabajador['sueldo_bruto']} - {trabajador['desc_salud']} - {trabajador['desc_afp']} - {trabajador['sueldo_liquido']} \n ")
+    print("Se ha creado el archivo exitosamente")
+
+
+def crear_archivo_cargo(lista_trabajadores):
+    with open('planilla_trabajadores_cargo.txt', 'w') as archivo:
+        for trabajador in lista_trabajadores:
+            archivo.write(f"{trabajador['nombre']} {trabajador['apellido']} - {trabajador['cargo']} - {trabajador['sueldo_bruto']} - {trabajador['desc_salud']} - {trabajador['desc_afp']} - {trabajador['sueldo_liquido']} \n")
+    print("Se ha creado el archivo exitosamente")
+
+
+def menu():
+    while True:
+        print("----- Menú de opciones -----")
+        print("1- Registrar trabajador")
+        print("2- Listar trabajadores")
+        print("3- Imprimir trabajadores")
+        print("4- Sair")
+        op = input("Seleccione una opción: ")
+
+        if op =='1':
+            registrar_usuario()
+        elif op =='2':
+            listar_trabajadores()
+        elif op =='3':
+            imprimir_trabajadores()
+        elif op =='4':
+            print("CHAITO")
+            break
+        else:
+            print("Opción incorrecta")
+        
+menu()
+
